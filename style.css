@@ -31,30 +31,51 @@ nav a:hover {
     background-color: #1abc9c;
 }
 
-div#content img{
+/* KÉP: Pontosan 50%, ahogy az elején volt */
+div#content img {
     float: right;
-    width: 50%;
+    width: 40%;
     height: auto;
     margin: 0 0 15px 15px;
     padding: 3px;
 }
 
-div#content { 
+/* TARTALOM ÉS ROOT: Itt oldjuk meg a görgetést */
+div#content, #root { 
     max-width: 95%;
     margin: 40px auto;
     padding: 20px;
-    overflow: auto;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    
+    /* Ez tolja el a táblázatot a footer elől */
+    padding-bottom: 150px !important; 
+    
+    overflow: auto;
+    display: block;
 }
 
-footer{
+/* TÁBLÁZAT: Visszaállítjuk a vékonyabb sorokat */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 4px 8px; /* Kisebb padding = vékonyabb sorok */
+    border: 1px solid #ddd;
+}
+
+/* FOOTER: Fix marad, ahogy kérted */
+footer {
     background-color: #2c3e50;
     color: white;
     text-align: center;
     padding: 10px;
     position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%; 
+    z-index: 1000;
 }
