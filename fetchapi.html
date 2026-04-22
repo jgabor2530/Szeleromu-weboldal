@@ -53,33 +53,35 @@
 </body>
 
 <script>
-    //Adatbázis elérés
     const apiUrl = 'api.php?table=megye';
 
-    // Adatok beolvasása
+    // 1. Adatok beolvasása (GET)
     async function loadData() {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
 
-        const tbody = document.getElementById('megyeTablaBody');
-        tbody.innerHTML = '';
+            const tbody = document.getElementById('megyeTablaBody');
+            tbody.innerHTML = '';
 
-        data.forEach(megye => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${megye.id}</td>
-                    <td>${megye.nev}</td>
-                    <td>${megye.regio}</td>
-                    <td>
-                        <button onclick="editMegye(${megye.id}, '${megye.nev}', '${megye.regio}')">Módosít</button>
-                        <button onclick="deleteMegye(${megye.id})" style="color: red;">Töröl</button>
-                    </td>
-                </tr>
-            `;
-        });
+            data.forEach(megye => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${megye.id}</td>
+                        <td>${megye.nev}</td>
+                        <td>${megye.regio}</td>
+                        <td>
+                            <button onclick="editMegye(${megye.id}, '${megye.nev}', '${megye.regio}')">Módosít</button>
+                            <button onclick="deleteMegye(${megye.id})" style="color: red;">Töröl</button>
+                        </td>
+                    </tr>`;
+            });
+        } catch (err) {
+            console.error("Hiba a betöltéskor:", err);
+        }
     }
 
-    // Mentés: Létrehozás vagy Módosítás
+    // 2. Mentés (POST vagy PUT)
     async function saveMegye() {
         const id = document.getElementById('megyeId').value;
         const nev = document.getElementById('megyeNev').value;
@@ -87,36 +89,44 @@
 
         if (!nev || !regio) return alert("Minden mezőt ki kell tölteni!");
 
+        // Ha van ID, akkor módosítás (PUT), ha nincs, akkor új (POST)
         const method = id ? 'PUT' : 'POST';
-        const payload = { id, nev, regio };
+        
+        const url = id ? `${apiUrl}&id=${id}` : apiUrl;
 
-        await fetch(apiUrl, {
+        const response = await fetch(url, {
             method: method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ nev, regio })
         });
 
-        // Űrlap törlése és tábla frissítése
-        document.getElementById('megyeId').value = '';
-        document.getElementById('megyeNev').value = '';
-        document.getElementById('megyeRegio').value = '';
-        loadData();
+        if (response.ok) {
+            // Mezők ürítése
+            document.getElementById('megyeId').value = '';
+            document.getElementById('megyeNev').value = '';
+            document.getElementById('megyeRegio').value = '';
+            loadData();
+        }
     }
 
-    // Szerkesztés betöltése
+    // 3. Szerkesztés módba váltás
     function editMegye(id, nev, regio) {
         document.getElementById('megyeId').value = id;
         document.getElementById('megyeNev').value = nev;
         document.getElementById('megyeRegio').value = regio;
+        window.scrollTo(0, 0); // Felugrik az űrlaphoz
     }
 
-    // Törlés
+    // 4. Törlés (DELETE)
     async function deleteMegye(id) {
-        if (confirm("Biztosan törlöd az adatbázisból?")) {
-            await fetch(`${apiUrl}?id=${id}`, { method: 'DELETE' });
+        if (confirm("Biztosan törlöd?")) {
+            // Itt is &id= kell, mert az apiUrl már tartalmaz egy ?table=megye részt
+            await fetch(`${apiUrl}&id=${id}`, { method: 'DELETE' });
             loadData();
         }
     }
+
+    // Indítás
     loadData();
 </script>
 
