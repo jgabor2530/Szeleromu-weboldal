@@ -74,3 +74,4 @@ switch ($method) {
         }
         break;
 }
+?>
