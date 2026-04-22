@@ -55,7 +55,7 @@ function App() {
 
   return (
     <div style={{ maxWidth: '800px', margin: 'auto', padding: '20px' }}>
-      <h2>Helyszín Kezelő (React CRUD)</h2>
+      <h2>Helyszín szerkeztő (React CRUD)</h2>
       
       {/* Űrlap */}
       <div style={{ marginBottom: '20px', padding: '10px', background: '#e9ecef', borderRadius: '5px' }}>
