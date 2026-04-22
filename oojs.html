@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web programozás-1 Előadás Házi feladat</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #e0f7fa; color: #333; overflow-x: hidden; }
+        header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
+        nav { background-color: #34495e; display: flex; justify-content: center; padding: 10px; z-index: 10; position: relative; }
+        nav a { color: white; text-decoration: none; padding: 10px 20px; margin: 0 5px; border-radius: 5px; }
+        nav a:hover { background-color: #1abc9c; }
+        footer { background-color: #2c3e50; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; z-index: 10; }
+        
+        .controls { text-align: center; margin: 20px; position: relative; z-index: 5; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #00796b; color: white; border: none; border-radius: 5px; }
+        button:hover { background-color: #004d40; }
+
+        /* A grafikus szélturbina CSS elemei */
+        .turbina-container { position: absolute; bottom: 60px; width: 60px; display: flex; flex-direction: column; align-items: center; }
+        .oszlop { width: 10px; background-color: #bdc3c7; border-radius: 5px 5px 0 0; }
+        .rotor-kozep { width: 15px; height: 15px; background-color: #e74c3c; border-radius: 50%; position: absolute; top: -7px; z-index: 2; }
+        .lapatok { position: absolute; top: -60px; width: 120px; height: 120px; animation: forgas infinite linear; }
+        .lapat { position: absolute; left: 55px; width: 10px; height: 60px; background-color: #ecf0f1; border-radius: 50% 50% 10% 10%; transform-origin: bottom center; }
+        .lapat:nth-child(1) { transform: rotate(0deg); }
+        .lapat:nth-child(2) { transform: rotate(120deg); }
+        .lapat:nth-child(3) { transform: rotate(240deg); }
+
+        @keyframes forgas {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Web programozás-1 Előadás Házi feladat</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="javascript.html">Megye szerkeztő</a>
+        <a href="react.html">Helyszín szerkeztő</a>
+        <a href="spa.html">Alkalmazások</a>
+        <a href="fetchapi.html">Megye adatbázis szerkeztő</a>
+        <a href="axios.html">Széltorony adatbázis szerkeztő</a>
+        <a href="oojs.html">Szélerőmű park építő</a>
+    </nav>
+
+    <div class="controls">
+        <h2>Szélerőmű Park Építő (OOJS)</h2>
+        <button onclick="epitsTurbinat()">Új Szélturbina Építése</button>
+    </div>
+
+    <footer>
+        Készítette: Veszelszki Tamás (PO4YGX) / Juhász Gábor (R1HXNV)
+    </footer>
+
+    <script>
+        
+        class Epitmeny {
+            constructor(xPozicio, szin) {
+                this.xPozicio = xPozicio;
+                this.szin = szin;
+                this.domElem = document.createElement('div');
+            }
+            alapKirajzolas() {
+                this.domElem.style.left = this.xPozicio + 'px';
+                this.domElem.className = 'turbina-container';
+                document.body.appendChild(this.domElem); 
+            }
+        }
+        class Szelturbina extends Epitmeny {
+            constructor(xPozicio, magassag, sebesseg) {
+                super(xPozicio, '#bdc3c7'); 
+                this.magassag = magassag;
+                this.sebesseg = sebesseg;
+            }
+
+            kirajzolas() {
+                // Ősosztály metódusának hívása
+                super.alapKirajzolas();
+
+                // Oszlop létrehozása
+                const oszlop = document.createElement('div');
+                oszlop.className = 'oszlop';
+                oszlop.style.height = this.magassag + 'px';
+                this.domElem.appendChild(oszlop);
+
+                // Rotor közép
+                const rotor = document.createElement('div');
+                rotor.className = 'rotor-kozep';
+                this.domElem.appendChild(rotor);
+
+                // Lapátok tartója
+                const lapatok = document.createElement('div');
+                lapatok.className = 'lapatok';
+                lapatok.style.animationDuration = this.sebesseg + 's'; // Forgási sebesség beállítása
+                
+                // 3 lapát hozzáadása
+                for(let i = 0; i < 3; i++) {
+                    const lapat = document.createElement('div');
+                    lapat.className = 'lapat';
+                    lapatok.appendChild(lapat);
+                }
+                
+                this.domElem.appendChild(lapatok);
+            }
+        }
+
+        let pozicioSzamlalo = 50;
+
+        // Gombnyomásra hívódik meg ez a függvény
+        function epitsTurbinat() {
+            // Limitáció, hogy mennyi turbina fér el a kijelzőn
+            if (pozicioSzamlalo > window.innerWidth - 100) {
+                alert("Nincs több hely a parkban!");
+                return;
+            }
+
+            // Véletlenszerű magasság (100px - 250px) és forgási sebesség (1s - 4s)
+            const randomMagassag = Math.floor(Math.random() * 150) + 100;
+            const randomSebesseg = (Math.random() * 3) + 1;
+
+            // Objektum példányosítása és kirajzolása
+            const ujTurbina = new Szelturbina(pozicioSzamlalo, randomMagassag, randomSebesseg);
+            ujTurbina.kirajzolas();
+
+            pozicioSzamlalo += 120; // Következő turbina 120px távolságra
+        }
+    </script>
+</body>
+</html>
