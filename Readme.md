@@ -7,7 +7,7 @@ Veszelszki Tamás (Neptun: PO4YGX)
 Juhász Gábor (Neptun: R1HXNV) 
 
  Az alkalmazás elérhetősége:
-Éles weboldal:  https://szeleromu.nhely.hu/index.html
+Éles weboldal:  http://szeleromu.nhely.hu/index.html
 A projekt futtatásához XAMPP (vagy hasonló webszerver) használata javasolt a PHP backend miatt.*
 
 Megvalósított Feladatrészek (Menüpontok):
