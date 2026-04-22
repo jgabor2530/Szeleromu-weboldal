@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
-require_once 'db_config.php';
+require_once 'config.php';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);
