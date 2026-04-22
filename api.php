@@ -7,11 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
-
-$host = "mysql.nethely.hu";
-$db_name = "szeleromu";
-$username = "szeleromu1";
-$password = "!beadando1!";
+require_once 'db_config.php';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);
