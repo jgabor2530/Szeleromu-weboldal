@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Web programozás-1 Előadás Házi feladat</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Web programozás-1 Előadás Házi feladat</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="javascript.html">Megye szerkeztő</a>
+        <a href="react.html">Helyszín szerkeztő</a>
+        <a href="spa.html">Alkalmazások</a>
+        <a href="fetchapi.html">Megye adatbázis szerkeztő</a>
+        <a href="axios.html">Széltorony adatbázis szerkeztő</a>
+        <a href="oojs.html">Szélerőmű park építő</a>
+    </nav>
+
+    <div id="content">
+    <h2>Megye szerkeztő (JS CRUD)</h2>
+    
+    <div style="margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px;">
+        <input type="hidden" id="megyeId">
+        <input type="text" id="megyeNev" placeholder="Megye neve" required>
+        <input type="text" id="megyeRegio" placeholder="Régió neve" required>
+        <button onclick="saveMegye()" style="padding: 5px 10px; background: #27ae60; color: white; border: none; cursor: pointer;">Mentés</button>
+    </div>
+
+    <table border="1" width="100%" style="border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: #34495e; color: white;">
+                <th>ID</th><th>Név</th><th>Régió</th><th>Műveletek</th>
+            </tr>
+        </thead>
+        <tbody id="megyeTablaBody">
+            </tbody>
+    </table>
+</div>
+
+   <footer>
+        Készítette: Veszelszki Tamás (PO4YGX) / Juhász Gábor (R1HXNV)
+    </footer>
+    </body>
+   
+<script>
+    // Kiinduló adatok tömbben tárolva
+    let megyek = [
+        { id: 1, nev: "Borsod-Abaúj-Zemplén", regio: "Észak-Magyarország" },
+        { id: 2, nev: "Heves", regio: "Észak-Magyarország" },
+        { id: 7, nev: "Bács-Kiskun", regio: "Dél-Alföld" }
+    ];
+
+    //Táblázat kirajzolása
+    function renderTable() {
+        const tbody = document.getElementById('megyeTablaBody');
+        tbody.innerHTML = ''; // Előző tartalom törlése
+
+        megyek.forEach(megye => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${megye.id}</td>
+                <td>${megye.nev}</td>
+                <td>${megye.regio}</td>
+                <td>
+                    <button onclick="editMegye(${megye.id})">Módosít</button>
+                    <button onclick="deleteMegye(${megye.id})" style="color: red;">Töröl</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    //Mentés gomb
+    function saveMegye() {
+        const idInput = document.getElementById('megyeId').value;
+        const nevInput = document.getElementById('megyeNev').value;
+        const regioInput = document.getElementById('megyeRegio').value;
+
+        if (!nevInput || !regioInput) {
+            alert("Minden mezőt ki kell tölteni!");
+            return;
+        }
+
+        if (idInput) {
+            //Ha van ID, akkor egy létezőt módosítunk
+            const index = megyek.findIndex(m => m.id == idInput);
+            megyek[index].nev = nevInput;
+            megyek[index].regio = regioInput;
+        } else {
+            //Ha nincs ID, újat hozunk létre
+            const newId = megyek.length > 0 ? Math.max(...megyek.map(m => m.id)) + 1 : 1;
+            megyek.push({ id: newId, nev: nevInput, regio: regioInput });
+        }
+
+        // Űrlap ürítése és tábla újrarajzolása
+        document.getElementById('megyeId').value = '';
+        document.getElementById('megyeNev').value = '';
+        document.getElementById('megyeRegio').value = '';
+        renderTable();
+    }
+
+    //Betölti az adatokat az űrlapba
+    function editMegye(id) {
+        const megye = megyek.find(m => m.id === id);
+        document.getElementById('megyeId').value = megye.id;
+        document.getElementById('megyeNev').value = megye.nev;
+        document.getElementById('megyeRegio').value = megye.regio;
+    }
+
+    //Törlés ID alapján
+    function deleteMegye(id) {
+        if(confirm("Biztosan törölni szeretnéd?")) {
+            megyek = megyek.filter(m => m.id !== id);
+            renderTable();
+        }
+    }
+
+    renderTable();
+</script>
+</html>
