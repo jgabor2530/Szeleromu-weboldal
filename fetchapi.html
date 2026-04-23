@@ -114,13 +114,12 @@
         document.getElementById('megyeId').value = id;
         document.getElementById('megyeNev').value = nev;
         document.getElementById('megyeRegio').value = regio;
-        window.scrollTo(0, 0); // Felugrik az űrlaphoz
+        window.scrollTo(0, 0);
     }
 
     // 4. Törlés (DELETE)
     async function deleteMegye(id) {
         if (confirm("Biztosan törlöd?")) {
-            // Itt is &id= kell, mert az apiUrl már tartalmaz egy ?table=megye részt
             await fetch(`${apiUrl}&id=${id}`, { method: 'DELETE' });
             loadData();
         }
