@@ -5,7 +5,6 @@ function App() {
   const [tornyok, setTornyok] = useState([]);
   const [formData, setFormData] = useState({ id: '', darab: '', teljesitmeny: '', kezdev: '', helyszinid: '' });
   
-  // Az alap URL, amiben már van egy paraméter (?)
   const apiUrl = 'api.php?table=torony';
 
   useEffect(() => {
@@ -14,7 +13,6 @@ function App() {
 
   async function loadData() {
     try {
-      // Gyorsítótárazás megelőzése egy timestamp-pel
       const response = await axios.get(`${apiUrl}&t=${new Date().getTime()}`);
       setTornyok(response.data);
     } catch (error) {
@@ -28,7 +26,6 @@ function App() {
   };
 
   const handleSave = async () => {
-    // 1. Számmá alakítás (Payload előkészítése)
     const payload = {
       ...formData,
       darab: Number(formData.darab),
@@ -43,12 +40,10 @@ function App() {
 
     try {
       if (formData.id) {
-        // SZERKESZTÉS: Itt is érdemes az ID-t az URL-ben is átadni, ha az API úgy várja
         await axios.put(`${apiUrl}&id=${formData.id}`, payload); 
       } else {
-        // ÚJ FELVÉTEL: ID törlése, hogy a MySQL generálja (AUTO_INCREMENT)
         const newRecord = { ...payload };
-        delete newRecord.id; // Töröljük az id mezőt a másolatból
+        delete newRecord.id;
         await axios.post(apiUrl, newRecord);
       }
 
@@ -64,7 +59,6 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm("Biztosan törlöd ezt a tornyot?")) {
       try {
-        // JAVÍTÁS: ?id= helyett &id= használata, mert már van ? az URL-ben
         await axios.delete(`${apiUrl}&id=${id}`);
         loadData();
       } catch (error) {
@@ -94,7 +88,7 @@ function App() {
         
 <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
   <button 
-    type="button" // <--- EZ A KULCS: megakadályozza az automata submit-ot
+    type="button"
     onClick={handleSave} 
     style={{ background: '#27ae60', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer', marginRight: '10px' }}
   >
@@ -102,7 +96,7 @@ function App() {
   </button>
   {formData.id && (
     <button 
-      type="button" // Itt is érdemes megadni
+      type="button"
       onClick={() => setFormData({ id: '', darab: '', teljesitmeny: '', kezdev: '', helyszinid: '' })}
     >
       Mégse
